@@ -2,7 +2,7 @@
 name = "bookstore"
 version = "0.1.0"
 description = "Bookstore API"
-authors = ["Eick Swolkin <swolkinerick@gmail.com>"]
+authors = ["Erick Swolkin <swolkinerick@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -11,6 +11,7 @@ pytest = "^8.0.0"
 factory-boy = "^3.3.0"
 django = "^5.0.1"
 djangorestframework = "^3.14.0"
+django-extensions = "^3.2.3"
 
 
 [build-system]

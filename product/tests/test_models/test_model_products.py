@@ -10,7 +10,6 @@ class TestProductModels(TestCase):
         self.product = Product.objects.create(title='produto_test')
         self.product.category.add(self.category)
 
-
-def test_product_creation(self):
-    self.assertEqual(self.product.title, 'produto_test')
-    self.assertEqual(self.product.category[0]['title'], 'testando')
+    def test_product_creation(self):
+        self.assertEqual(self.product.title, 'produto_test')
+        self.assertEqual(self.product.category.first().title, 'testando')
