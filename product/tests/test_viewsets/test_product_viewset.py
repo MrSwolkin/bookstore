@@ -3,7 +3,6 @@ import json
 
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from django.urls import reverse
 
 from product.factories import CategoryFactory, ProductFactory
@@ -20,8 +19,6 @@ class TestProductViewset(APITestCase):
     def setUp(self):
         # criando um usuario de teste
         self.user = UserFactory()
-        token = Token.objects.create(user=self.user)
-        token.save()
 
         # crinado um produto de teste
         self.product = ProductFactory(
@@ -30,8 +27,7 @@ class TestProductViewset(APITestCase):
         )
 
     def test_get_all_product(self):
-        token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+
         # testando o resultado dos produtos obtidos através da API
         response = self.client.get(
             reverse('product-list', kwargs={'version': 'v1'})
@@ -50,8 +46,7 @@ class TestProductViewset(APITestCase):
                          [0]['active'], self.product.active)
 
     def test_create_product(self):
-        token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+
         # crinado a categoria para associar ao produto novo
         category = CategoryFactory()
 
