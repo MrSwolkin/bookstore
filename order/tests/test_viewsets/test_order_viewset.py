@@ -3,6 +3,7 @@ import json
 # importando o status e a biblioteca de teste do rest_framework
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+from rest_framework.authtoken.models import Token
 
 from django.urls import reverse
 # importando bibliotecas do app
@@ -21,6 +22,8 @@ class TestOrderViewSet(APITestCase):
 
     # configurando os dados de teste
     def setUp(self):
+        # criando usuario
+        self.user = UserFactory()
         # criando categoria do produto
         self.category = CategoryFactory(title='tecnology')
         # criando produto assiciado a categoria
@@ -28,9 +31,14 @@ class TestOrderViewSet(APITestCase):
             title='mouse', price=100, category=[self.category])
         # crinado uma ordem de pedido do produto criado
         self.order = OrderFactory(product=[self.product])
+        # criando o token
+        token = Token.objects.create(user=self.user)
+        token.save()
 
     # testando a listagem de pedidos
     def test_order(self):
+        token = Token.objects.get(user__username=self.user.username)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         # solicitando com GET  para listar os pedidos
         response = self.client.get(
             reverse('order-list', kwargs={'version': 'v1'})
@@ -53,6 +61,8 @@ class TestOrderViewSet(APITestCase):
 
     # testando criação de um novo pedido
     def test_create_order(self):
+        token = Token.objects.get(user__username=self.user.username)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         # criando usuario de teste
         user = UserFactory()
 
