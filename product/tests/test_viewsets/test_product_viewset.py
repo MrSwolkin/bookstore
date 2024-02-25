@@ -3,7 +3,6 @@ import json
 
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-
 from django.urls import reverse
 
 from product.factories import CategoryFactory, ProductFactory
@@ -28,6 +27,7 @@ class TestProductViewset(APITestCase):
         )
 
     def test_get_all_product(self):
+
         # testando o resultado dos produtos obtidos através da API
         response = self.client.get(
             reverse('product-list', kwargs={'version': 'v1'})
@@ -38,9 +38,12 @@ class TestProductViewset(APITestCase):
         product_data = json.loads(response.content)
 
         # compoarando os dados obtido da api com o do produto de teste
-        self.assertEqual(product_data[0]['title'], self.product.title)
-        self.assertEqual(product_data[0]['price'], self.product.price)
-        self.assertEqual(product_data[0]['active'], self.product.active)
+        self.assertEqual(product_data['results']
+                         [0]['title'], self.product.title)
+        self.assertEqual(product_data['results']
+                         [0]['price'], self.product.price)
+        self.assertEqual(product_data['results']
+                         [0]['active'], self.product.active)
 
     def test_create_product(self):
 
