@@ -18,13 +18,11 @@ class TestCategoryViewSet(APITestCase):
 
     def setUp(self):
         # criando uma categoria de produto
-        self.category = CategoryFactory(title='books')
+        self.category = CategoryFactory(title="books")
 
     def test_get_all_category(self):
         # testando u resultado da categoria dentro da api
-        response = self.client.get(
-            reverse('category-list', kwargs={'version': 'v1'})
-        )
+        response = self.client.get(reverse("category-list", kwargs={"version": "v1"}))
         # import pdb; pdb.set_trace()
         # varificando se a resposta foi 200 + a bem-sucedida
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -32,27 +30,24 @@ class TestCategoryViewSet(APITestCase):
 
         category_data = json.loads(response.content)
 
-        self.assertEqual(category_data['results']
-                         [0]['title'], self.category.title)
+        self.assertEqual(category_data["results"][0]["title"], self.category.title)
 
     def test_create_category(self):
         # criando um nova categoria em json
-        data = json.dumps({
-            'title': 'technology'
-        })
+        data = json.dumps({"title": "technology"})
 
         # PoST para criar uma nova categoria na API
         response = self.client.post(
-            reverse('category-list', kwargs={'version': 'v1'}),
+            reverse("category-list", kwargs={"version": "v1"}),
             data=data,
-            content_type='application/json'
+            content_type="application/json",
         )
 
         # comparando se a resposta retornada é bem-sucedida
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # buscando no banco de dados a categoria recem criada
-        created_category = Category.objects.get(title='technology')
+        created_category = Category.objects.get(title="technology")
 
         # comparando
-        self.assertEqual(created_category.title, 'technology')
+        self.assertEqual(created_category.title, "technology")

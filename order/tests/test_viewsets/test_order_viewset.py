@@ -1,11 +1,13 @@
 # importando o json
 import json
+
 # importando o status e a biblioteca de teste do rest_framework
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.authtoken.models import Token
 
 from django.urls import reverse
+
 # importando bibliotecas do app
 from product.factories import ProductFactory, CategoryFactory
 from order.factories import UserFactory, OrderFactory
@@ -25,10 +27,11 @@ class TestOrderViewSet(APITestCase):
         # criando usuario
         self.user = UserFactory()
         # criando categoria do produto
-        self.category = CategoryFactory(title='tecnology')
+        self.category = CategoryFactory(title="tecnology")
         # criando produto assiciado a categoria
         self.product = ProductFactory(
-            title='mouse', price=100, category=[self.category])
+            title="mouse", price=100, category=[self.category]
+        )
         # crinado uma ordem de pedido do produto criado
         self.order = OrderFactory(product=[self.product])
         # criando o token
@@ -38,11 +41,9 @@ class TestOrderViewSet(APITestCase):
     # testando a listagem de pedidos
     def test_order(self):
         token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         # solicitando com GET  para listar os pedidos
-        response = self.client.get(
-            reverse('order-list', kwargs={'version': 'v1'})
-        )
+        response = self.client.get(reverse("order-list", kwargs={"version": "v1"}))
         # verificando se a resposta fo bem-sucedida (status 200)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -50,19 +51,24 @@ class TestOrderViewSet(APITestCase):
         order_data = json.loads(response.content)
 
         # comparando dados do pedido com o dados do produto e categoria
-        self.assertEqual(order_data['results'][0]
-                         ['product'][0]['title'], self.product.title)
-        self.assertEqual(order_data['results'][0]
-                         ['product'][0]['price'], self.product.price)
-        self.assertEqual(order_data['results'][0]['product'][0]
-                         ['active'], self.product.active)
-        self.assertEqual(order_data['results'][0]['product'][0]
-                         ['category'][0]['title'], self.category.title)
+        self.assertEqual(
+            order_data["results"][0]["product"][0]["title"], self.product.title
+        )
+        self.assertEqual(
+            order_data["results"][0]["product"][0]["price"], self.product.price
+        )
+        self.assertEqual(
+            order_data["results"][0]["product"][0]["active"], self.product.active
+        )
+        self.assertEqual(
+            order_data["results"][0]["product"][0]["category"][0]["title"],
+            self.category.title,
+        )
 
     # testando criação de um novo pedido
     def test_create_order(self):
         token = Token.objects.get(user__username=self.user.username)
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
         # criando usuario de teste
         user = UserFactory()
 
@@ -70,16 +76,18 @@ class TestOrderViewSet(APITestCase):
         product = ProductFactory()
 
         # criando os dados do pedido em formato json
-        data = json.dumps({
-            # id do produto incluido no pedido
-            'products_id': [product.id],
-            'user': user.id  # id do usuario que fez o pedido
-        })
+        data = json.dumps(
+            {
+                # id do produto incluido no pedido
+                "products_id": [product.id],
+                "user": user.id,  # id do usuario que fez o pedido
+            }
+        )
         # fazendo uma solicitaçõa POST para criar um novo pedido
         response = self.client.post(
-            reverse('order-list', kwargs={'version': 'v1'}),
+            reverse("order-list", kwargs={"version": "v1"}),
             data=data,
-            content_type='application/json'
+            content_type="application/json",
         )
 
         # verificando se foi bem-sucesdida (código staus:201)
