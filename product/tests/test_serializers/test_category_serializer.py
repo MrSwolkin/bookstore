@@ -11,9 +11,9 @@ from product.serializers import CategorySerializer
 
 class TestCategorySerializer(TestCase):
     def setUp(self) -> None:
-        self.category = CategoryFactory(title='teste1')
+        self.category = CategoryFactory(title="teste1")
         self.category_serializer = CategorySerializer(self.category)
 
     def test_category_serializer(self):
         serializer_data = self.category_serializer.data
-        self.assertEqual(serializer_data['title'], self.category.title)
+        self.assertEqual(serializer_data["title"], self.category.title)
