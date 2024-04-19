@@ -153,12 +153,13 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", default="password")
 
 DEBUG = int(os.environ.get("DEBUG", default=0))
 
 # "DJANGO_ALLOWED_HOSTS" should be asongle string of hosts with a space between each.
 # For example: "DJANGO_ALLOWED_HOSTS=locahost 127.0.0.1[::1]"
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split()
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(" ")
+
 # ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '0.0.0.0']
